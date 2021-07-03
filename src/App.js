@@ -1,22 +1,21 @@
 import React, {useState, useEffect} from 'react';
 import './App.css';
-
+import CityCountry from './components/CityCountry';
+import IconTem from './components/IconTemp';
+import Button from './components/Button';
 function App() {
   const [coordinate, setCoordinate] = useState([]);
   const [datalocation, setDataLocation] = useState([]);
+  const [temperature, setTemperature] = useState('');
+  const [tempLetter, setTempLetter] = useState('')
   useEffect(()=>{
-    const option = {
-      enableHighAccuracy: true,
-      maximumAge: 5000,
-      timeout: 0
-  };
   const succes = (position)=>{
     setCoordinate([...coordinate, position.coords.latitude, position.coords.longitude]);
   };
   const err = (err)=>{
-
+    console.log(err)
   };
-  navigator.geolocation.getCurrentPosition(succes, err, option)
+  navigator.geolocation.getCurrentPosition(succes, err)
   }, []);
 
   useEffect(()=>{
@@ -25,20 +24,23 @@ function App() {
       fetch(url)
       .then(res=>res.json())
       .then(json=>{
+         setTemperature(json.current.temp_c)
+         setTempLetter('°C')
          setDataLocation([...datalocation, json])
       })
     }
   }, [coordinate]);
-
-  useEffect(()=>{
-    if(datalocation.length !==0){
-      console.log(datalocation)
-    }
-  }, [datalocation]);
-
   return (
     <div className="App">
       <header className="App-header">
+        <CityCountry datalocation = {datalocation}/>
+        <IconTem datalocation = {datalocation} 
+        temperature = {temperature}
+        tempLetter={tempLetter}/>
+        <Button setTemperature={setTemperature} 
+        setTempLetter={setTempLetter}
+        datalocation={datalocation}
+        temperature={temperature} />
       </header>
     </div>
   );

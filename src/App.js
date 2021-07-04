@@ -3,19 +3,17 @@ import './App.css';
 import CityCountry from './components/CityCountry';
 import IconTem from './components/IconTemp';
 import Button from './components/Button';
+import ExtraInformation from './components/ExtraInformation';
 function App() {
   const [coordinate, setCoordinate] = useState([]);
   const [datalocation, setDataLocation] = useState([]);
   const [temperature, setTemperature] = useState('');
-  const [tempLetter, setTempLetter] = useState('')
+  const [tempLetter, setTempLetter] = useState('');
   useEffect(()=>{
   const succes = (position)=>{
     setCoordinate([...coordinate, position.coords.latitude, position.coords.longitude]);
   };
-  const err = (err)=>{
-    console.log(err)
-  };
-  navigator.geolocation.getCurrentPosition(succes, err)
+  navigator.geolocation.getCurrentPosition(succes)
   }, []);
 
   useEffect(()=>{
@@ -30,20 +28,28 @@ function App() {
       })
     }
   }, [coordinate]);
-  return (
-    <div className="App">
-      <header className="App-header">
-        <CityCountry datalocation = {datalocation}/>
-        <IconTem datalocation = {datalocation} 
-        temperature = {temperature}
-        tempLetter={tempLetter}/>
-        <Button setTemperature={setTemperature} 
-        setTempLetter={setTempLetter}
-        datalocation={datalocation}
-        temperature={temperature} />
-      </header>
-    </div>
-  );
+  return(
+    datalocation.length !==0 ? 
+      <div className="App">
+        <div className="App_container">
+          <div className="container_CityCountry">
+            <CityCountry datalocation = {datalocation}/>
+          </div>
+          <div className="container_IconButtonExtra">
+            <div className="IconButtonExtra_IconButton">
+              <div className="IconButton_Tem">
+                <IconTem datalocation = {datalocation} temperature = {temperature} tempLetter={tempLetter}/>
+              </div>
+              <Button setTemperature={setTemperature} setTempLetter={setTempLetter} datalocation={datalocation} temperature={temperature} />
+            </div>
+            <div className="IconButtonExtra_Extra">
+              <ExtraInformation datalocation={datalocation}/>
+            </div>
+          </div>
+        </div>
+      </div>
+    : ''
+  )  
 }
 
 export default App;

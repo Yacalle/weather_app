@@ -9,6 +9,6 @@ export default function Button ({setTemperature, setTempLetter, datalocation, te
                 setTemperature(datalocation[0].current.temp_c);
                 setTempLetter('°C')
             }
-        }}>°C/°F</button>
+        }}>°C⇋°F</button>
     )
 }
